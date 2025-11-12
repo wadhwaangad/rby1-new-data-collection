@@ -143,6 +143,8 @@ class RBY1Controller:
         self.left_qvel =None
         self.right_torque =None
         self.left_torque =None
+        self.left_ft = None
+        self.right_ft = None
         self.right_minimum_time = 1.0
         self.left_minimum_time = 1.0
         
@@ -199,6 +201,8 @@ class RBY1Controller:
     def robot_state_callback(self, state: rby.RobotState_A):
         with self.lock:
             self.robot_q = state.position
+            self.left_ft =state.ft_sensor_left
+            self.right_ft = state.ft_sensor_right
 
     def setup_robot(self, address):
         self.robot = rby.create_robot(address, 'a')
@@ -400,8 +404,8 @@ class RBY1Controller:
                 ),
                 right_arm_torque = self.right_torque,
                 left_arm_torque = self.left_torque,
-                ft_sensor_right=rby.RobotState_A.ft_sensor_right,
-                ft_sensor_left=rby.RobotState_A.ft_sensor_left
+                ft_sensor_right=self.right_ft,
+                ft_sensor_left=self.left_ft
 
                 )
         
